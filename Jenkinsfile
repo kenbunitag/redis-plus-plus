@@ -8,7 +8,7 @@ node {
         def product = 'kenbun'
         def name = 'kazoku'
         
-        if (env.BRANCH_NAME == 'main') {
+        if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master' ) {
             buildAndDeployLib()
         } else {
             buildOnly()
