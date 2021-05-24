@@ -19,7 +19,6 @@ node {
 
 def buildOnly() {
     stage("compile"){
-     try {
             docker.withRegistry(env.nexusDockerRepo, 'nexus') {
                 def pythonImage = docker.image('docker.kenbun.de/kenbun/cppubuntu2004')
                 pythonImage.pull()
@@ -30,16 +29,11 @@ def buildOnly() {
                     }
                 }
             }
-        } finally {
-            sh ("ls -rtl build")
-            junit 'build/*.xml'
-        }
     }
 }
 
 def buildAndDeployLib() {
     stage("deploy to apt repo"){
-        try {
             docker.withRegistry(env.nexusDockerRepo, 'nexus') {
                 def pythonImage = docker.image('docker.kenbun.de/kenbun/cppubuntu2004')
                 pythonImage.pull()
@@ -52,7 +46,6 @@ def buildAndDeployLib() {
                             sh("cd /workspace/build && for FILE in *.deb; do curl -u '" + nexusUser.toString() + ":" + nexusPassword.toString() + "' -H 'Content-Type: multipart/form-data'  --data-binary @\$FILE https://nexus.kenbun.de/repository/apt-kenbun/; done")
                         }
                     }
-                }
             }
 	}
     }
